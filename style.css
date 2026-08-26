@@ -1,16 +1,164 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    width: 400px;
-    margin: 50px auto;
+body {
+    min-height: 100vh;
+    background: #f6f8fc;
+    color: #172033;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
-input{
-    width:100%;
-    padding:10px;
-    margin-top:5px;
+.page-header h1 {
+    letter-spacing: -1px;
 }
 
-button{
-    padding:10px 20px;
-    cursor:pointer;
+.section-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #4f46e5;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.card {
+    border-radius: 16px;
+}
+
+.form-control {
+    min-height: 46px;
+    border-color: #dfe3eb;
+    border-radius: 10px;
+}
+
+.form-control:focus {
+    border-color: #6366f1;
+    box-shadow:
+        0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.btn {
+    border-radius: 9px;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.btn-primary:hover {
+    background: #4338ca;
+    border-color: #4338ca;
+}
+
+.user-card {
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 35px rgba(15, 23, 42, .08) !important;
+}
+
+.user-image,
+.user-avatar {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.user-image {
+    object-fit: cover;
+    border: 3px solid #eef2ff;
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.empty-state {
+    background: #fff;
+    border: 1px solid #e9edf3;
+    border-radius: 16px;
+}
+
+.empty-icon,
+.success-icon,
+.error-icon,
+.warning-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.empty-icon {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.success-icon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.error-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.warning-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.modal-content {
+    border-radius: 18px;
+}
+
+.modal-header {
+    padding: 24px 25px 15px;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.form-text {
+    font-size: 12px;
+}
+
+@media (max-width: 576px) {
+
+    .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .page-header h1 {
+        font-size: 30px;
+    }
+
+    .user-card .card-body {
+        padding: 20px !important;
+    }
 }

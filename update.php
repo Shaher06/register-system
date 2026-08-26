@@ -15,6 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
+$id = filter_input(
+    INPUT_POST,
+    "id",
+    FILTER_VALIDATE_INT
+);
+
 $name = trim(
     $_POST["name"] ?? ""
 );
@@ -23,13 +29,18 @@ $email = trim(
     $_POST["email"] ?? ""
 );
 
-$password =
-    $_POST["password"] ?? "";
+if (!$id) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Invalid user ID."
+    ]);
+
+    exit;
+}
 
 if (
     isInputEmpty($name) ||
-    isInputEmpty($email) ||
-    isInputEmpty($password)
+    isInputEmpty($email)
 ) {
     echo json_encode([
         "success" => false,
@@ -42,7 +53,8 @@ if (
 if (!validateName($name)) {
     echo json_encode([
         "success" => false,
-        "message" => "Name can contain letters and spaces only."
+        "message" =>
+            "Name can contain letters and spaces only."
     ]);
 
     exit;
@@ -51,17 +63,8 @@ if (!validateName($name)) {
 if (!validateEmail($email)) {
     echo json_encode([
         "success" => false,
-        "message" => "Please enter a valid email address."
-    ]);
-
-    exit;
-}
-
-if (!validatePassword($password)) {
-    echo json_encode([
-        "success" => false,
         "message" =>
-            "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special character."
+            "Please enter a valid email address."
     ]);
 
     exit;
@@ -69,26 +72,59 @@ if (!validatePassword($password)) {
 
 try {
 
-    $hashedPassword =
-        encryptPassword($password);
+    $currentUser =
+        getUserById($pdo, $id);
 
-    $imageName =
-        uploadImage(
-            $_FILES["image"] ?? []
-        );
+    if (!$currentUser) {
+        echo json_encode([
+            "success" => false,
+            "message" => "User not found."
+        ]);
 
-    createUser(
+        exit;
+    }
+
+    $imageName = null;
+
+    if (
+        isset($_FILES["image"]) &&
+        $_FILES["image"]["error"] !==
+        UPLOAD_ERR_NO_FILE
+    ) {
+
+        $imageName =
+            uploadImage(
+                $_FILES["image"]
+            );
+    }
+
+    updateUserData(
         $pdo,
+        $id,
         $name,
         $email,
-        $hashedPassword,
         $imageName
     );
+
+    if (
+        $imageName !== null &&
+        !empty($currentUser["image"])
+    ) {
+
+        $oldImage =
+            __DIR__ .
+            "/uploads/" .
+            $currentUser["image"];
+
+        if (file_exists($oldImage)) {
+            unlink($oldImage);
+        }
+    }
 
     echo json_encode([
         "success" => true,
         "message" =>
-            "Account created successfully."
+            "User updated successfully."
     ]);
 
 } catch (PDOException $e) {
@@ -107,7 +143,7 @@ try {
     echo json_encode([
         "success" => false,
         "message" =>
-            "Something went wrong while creating the account."
+            "Something went wrong while updating the user."
     ]);
 
 } catch (Exception $e) {
